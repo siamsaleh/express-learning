@@ -5,20 +5,28 @@ const noteRouter = require("./routes/noteRoutes");
 
 const mongoose = require("mongoose");
 
+// Response Sent in JSON format
+app.use(express.json());
 
-app.use("/users", userRouter)
-app.use("/note", noteRouter)
+// Middleware
+app.use((req, res, next) => {
+    console.log("HTTP Method - " + req.method + ", URL - " + req.url);
+    next();
+})
 
-app.get("/", (req, res) =>{
+app.use("/users", userRouter);
+app.use("/note", noteRouter);
+
+app.get("/", (req, res) => {
     res.send("Hello");
-})
+});
 
-mongoose.connect("mongodb+srv://siamsaleh:SiamSaleh@cluster0.tiie8uq.mongodb.net/")
-.then(()=>{
-    app.listen(5000, ()=>{
-        console.log("Server started on port no. 5000");
+mongoose.connect("mongodb+srv://siamsaleh:SiamSaleh@cluster0.tiie8uq.mongodb.net/express")
+    .then(() => {
+        app.listen(5000, () => {
+            console.log("Server started on port no. 5000");
+        })
     })
-})
-.catch((error)=>{
-    console.log(error)
-})
+    .catch((error) => {
+        console.log(error)
+    })

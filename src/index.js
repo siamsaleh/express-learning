@@ -21,10 +21,12 @@ app.get("/", (req, res) => {
     res.send("Hello");
 });
 
+const port = 8000;
+
 mongoose.connect("mongodb+srv://siamsaleh:SiamSaleh@cluster0.tiie8uq.mongodb.net/express")
     .then(() => {
-        app.listen(5000, () => {
-            console.log("Server started on port no. 5000");
+        app.listen(port, () => {
+            console.log("Server started on port no - " + port);
         })
     })
     .catch((error) => {

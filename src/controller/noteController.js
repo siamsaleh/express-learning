@@ -1,8 +1,9 @@
+const note = require("../models/note");
 const noteModel = require("../models/note");
 
-const createNote = async (req, res) =>{
-    
-    const {title, description} = req.body;
+const createNote = async (req, res) => {
+
+    const { title, description } = req.body;
 
     const newNote = new noteModel({
         title: title,
@@ -11,7 +12,7 @@ const createNote = async (req, res) =>{
     });
 
     try {
-        
+
         await newNote.save();
         res.status(201).json(newNote);
 
@@ -21,36 +22,45 @@ const createNote = async (req, res) =>{
     }
 };
 
-const updateNote = async (req, res) =>{
+const updateNote = async (req, res) => {
 
-    const noteId = req.params.noteId;
-    const {title, description} = req.body;
+    const id = req.params.noteId;
+    const { title, description } = req.body;
 
-    const newNote = new newNote({
+    const updateFeilds = {
         title: title,
         description: description,
         userId: req.userId
-    });
+    };
 
     try {
 
-        await noteModel.findByIdAndUpdate(noteId, newNote, {new: true});
-        res.status(200).json(newNote);
+        const updatedNote = await noteModel.findByIdAndUpdate(id, updateFeilds, { new: true });
+
+        // Check if the note was found and updated
+        if (!updatedNote) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+
+        res.status(200).json(updatedNote);
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json("Something went wrong");
+        console.error("Error updating note:", error.message); // Log error message
+        console.error("Error stack trace:", error.stack);     // Log error stack trace for debugging
+
+        // Send a more detailed error response (helpful for debugging)
+        res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 
 };
 
-const getNotes = async (req, res) =>{
-    
+const getNotes = async (req, res) => {
+
     try {
 
-        const notes = await noteModel.find({userId: req.userId});
+        const notes = await noteModel.find({ userId: req.userId });
         res.status(200).json(notes);
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json("Something went wrong");
@@ -58,16 +68,19 @@ const getNotes = async (req, res) =>{
 
 };
 
-const deleteNote = async (req, res) =>{
+const deleteNote = async (req, res) => {
 
     const noteId = req.params.noteId;
     try {
-        const note = await noteModel.findByIdAndRemove(noteId);
+        const note = await noteModel.findByIdAndDelete(noteId);
         res.status(202).json(note);
     } catch (error) {
-        console.log(error);
-        res.status(500).json("Something went wrong");
+        console.error("Error updating note:", error.message); // Log error message
+        console.error("Error stack trace:", error.stack);     // Log error stack trace for debugging
+
+        // Send a more detailed error response (helpful for debugging)
+        res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
 
-module.exports = {createNote, updateNote, getNotes, deleteNote}
+module.exports = { createNote, updateNote, getNotes, deleteNote }

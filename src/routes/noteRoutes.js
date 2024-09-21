@@ -5,10 +5,10 @@ const auth = require("../middlewares/auth.js");
 
 noteRouter.get("/", auth, getNotes);
 
-noteRouter.post("/",  auth, createNote);
+noteRouter.post("/", auth, createNote);
 
 noteRouter.delete("/:noteId", auth, deleteNote);
 
-noteRouter.put(":noteId", auth, updateNote);
+noteRouter.put("/:noteId", auth, updateNote);
 
 module.exports = noteRouter

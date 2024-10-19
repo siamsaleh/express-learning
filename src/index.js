@@ -4,21 +4,23 @@ const userRouter = require("./routes/userRoutes");
 const noteRouter = require("./routes/noteRoutes");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require('path'); //For find root path
 
-dotenv.config();
+dotenv.config({
+    path:path.join(process.cwd(), '.env')
+});
 
-const mongoose = require("mongoose");
-
+app.use(cors());
 // Response Sent in JSON format
 app.use(express.json());
+
+const mongoose = require("mongoose");
 
 // Middleware || for testing and learning how middleware works
 app.use((req, res, next) => {
     console.log("HTTP Method - " + req.method + ", URL - " + req.url);
     next();
 })
-
-app.use(cors());
 
 app.use("/users", userRouter);
 app.use("/note", noteRouter);
